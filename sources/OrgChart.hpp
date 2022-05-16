@@ -2,6 +2,7 @@
 #define ORGCHART_HPP
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 namespace ariel{
     class OrgChart
@@ -9,55 +10,42 @@ namespace ariel{
         private:
             string name;
             vector <OrgChart*> children;
-            static int size_of_tree;
         public:
             class level_order_iterator{
                 private:
                     OrgChart* pointer_to_curr;
+                    queue<OrgChart*> q;
+
                 public:
-                    string operator*() const;
-                    OrgChart* operator->() const;
+                    string& operator*() const;
+                    string* operator->() const;
                     level_order_iterator operator++();
-                        //to do: write function for level order
-                        //++i
-        
                     const level_order_iterator operator++(int);
-                        //to do: write function for level order
-                        //i++
                     bool operator==(const level_order_iterator& rhs) const;
                     bool operator!=(const level_order_iterator& rhs) const;
-        };
-        class reverse_order_iterator{
-                private:
-                    OrgChart* pointer_to_curr;
-                public:
-                    OrgChart& operator*() const;
-                    OrgChart* operator->() const;
-                    reverse_order_iterator operator++();
-                        //to do: write function for reverse order
-                        //++i
-                    const reverse_order_iterator operator++(int);
-                        //to do: write function for reverse order
-                        //i++
-                    bool operator==(const reverse_order_iterator& rhs) const;
-                    bool operator!=(const reverse_order_iterator& rhs) const;
-        };
-        class preorder_order_iterator{
-                private:
-                    OrgChart* pointer_to_curr;
-                public:
-                    OrgChart& operator*() const;
-                    OrgChart* operator->() const;
-                    preorder_order_iterator operator++();
-                        //to do: write function for preorder order
-                        //++i
-                    const preorder_order_iterator operator++(int);
-                        //to do: write function for preorder order
-                        //i++
-                    bool operator==(const preorder_order_iterator& rhs) const;
-                    bool operator!=(const preorder_order_iterator& rhs) const;
-        };
-            int size();
+            };
+            class reverse_order_iterator{
+                    private:
+                        OrgChart* pointer_to_curr;
+                    public:
+                        string& operator*() const;
+                        string* operator->() const;
+                        reverse_order_iterator operator++();
+                        const reverse_order_iterator operator++(int);
+                        bool operator==(const reverse_order_iterator& rhs) const;
+                        bool operator!=(const reverse_order_iterator& rhs) const;
+            };
+            class preorder_order_iterator{
+                    private:
+                        OrgChart* pointer_to_curr;
+                    public:
+                        string& operator*() const;
+                        string* operator->() const;
+                        preorder_order_iterator operator++();
+                        const preorder_order_iterator operator++(int);
+                        bool operator==(const preorder_order_iterator& rhs) const;
+                        bool operator!=(const preorder_order_iterator& rhs) const;
+            };
             OrgChart add_root(string name);
             OrgChart add_sub(string higher, string lower);
             level_order_iterator begin_level_order();
