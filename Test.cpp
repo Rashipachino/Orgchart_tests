@@ -18,13 +18,13 @@ TEST_CASE("Constructing OrgChart"){
 
 TEST_CASE("Level Order"){
     OrgChart fam;
-    fam.add_root("Bubby");
-    fam.add_sub("Bubby","Uncle Mel");
-    fam.add_sub("Bubby","Abba");
-    fam.add_sub("Bubby","Uncle Seth");
-    fam.add_sub("Bubby","Aunt Sue");
-    fam.add_sub("Abba", "Rashi");
-    fam.add_sub("Rashi", "Mocha");
+    fam.add_root("Bubby")
+    .add_sub("Bubby","Uncle Mel")
+    .add_sub("Bubby","Abba")
+    .add_sub("Bubby","Uncle Seth")
+    .add_sub("Bubby","Aunt Sue")
+    .add_sub("Abba", "Rashi")
+    .add_sub("Rashi", "Mocha");
     auto it = fam.begin_level_order();
     CHECK(*it == "Bubby");
     CHECK(it->substr(0, 5) == "Bubby");
@@ -48,7 +48,7 @@ TEST_CASE("Level Order"){
     CHECK(it->substr(0, 5) == "Mocha");
     it++;
     CHECK(it == fam.end_level_order());
-}
+ }
 
 TEST_CASE("Reverse Order"){
     OrgChart school;
@@ -93,13 +93,6 @@ TEST_CASE("Reverse Order"){
 }
 
 TEST_CASE("PreOrder"){
-    // OrgChart bakery;
-    // bakery.add_root("Owner");
-    // bakery.add_sub("Owner", "Manager");
-    // bakery.add_sub("Manager1", "Cashier");
-    // bakery.add_sub("Manager1", "Busboy");
-    // bakery.add_sub("Owner", "Manager2");
-    // bakery.add_sub("Cashier", "new employee");
     OrgChart organization;
     organization.add_root("CEO")
       .add_sub("CEO", "CTO")  
