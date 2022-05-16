@@ -14,7 +14,6 @@ namespace ariel{
             class level_order_iterator{
                 private:
                     OrgChart* pointer_to_curr;
-                    queue<OrgChart*> q;
 
                 public:
                     string& operator*() const;
@@ -46,6 +45,7 @@ namespace ariel{
                         bool operator==(const preorder_order_iterator& rhs) const;
                         bool operator!=(const preorder_order_iterator& rhs) const;
             };
+            string get_name();
             OrgChart add_root(string name);
             OrgChart add_sub(string higher, string lower);
             level_order_iterator begin_level_order();
