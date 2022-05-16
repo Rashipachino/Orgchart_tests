@@ -4,10 +4,10 @@
 using namespace std;
 namespace ariel{
             string& OrgChart::level_order_iterator::operator*() const{
-                return OrgChart::level_order_iterator::pointer_to_curr->name;
+                return this->pointer_to_curr->name;
             }      
             string* OrgChart::level_order_iterator::operator->() const{
-                return &(OrgChart::level_order_iterator::pointer_to_curr->name);
+                return &(this->pointer_to_curr->name);
             }  
             //to do: write function for level order
             //++i
@@ -28,10 +28,10 @@ namespace ariel{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
             string& OrgChart::reverse_order_iterator::operator*() const{
-                return OrgChart::reverse_order_iterator::pointer_to_curr->name;
+                return this->pointer_to_curr->name;
             }
             string* OrgChart::reverse_order_iterator::operator->() const{
-                return &(OrgChart::reverse_order_iterator::pointer_to_curr->name);
+                return &(this->pointer_to_curr->name);
             }
             //to do: write function for reverse order
             //++i
@@ -52,10 +52,10 @@ namespace ariel{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
             string& OrgChart::preorder_order_iterator::operator*() const{
-                return OrgChart::preorder_order_iterator::pointer_to_curr->name;
+                return this->pointer_to_curr->name;
             }
             string* OrgChart::preorder_order_iterator::operator->() const{
-                return &(OrgChart::preorder_order_iterator::pointer_to_curr->name);
+                return &(this->pointer_to_curr->name);
             }
             //to do: write function for preorder order ++i
             OrgChart::preorder_order_iterator OrgChart::preorder_order_iterator::operator++(){
@@ -72,6 +72,9 @@ namespace ariel{
             }
             bool OrgChart::preorder_order_iterator::operator!=(const preorder_order_iterator& rhs) const{
                 return pointer_to_curr != rhs.pointer_to_curr;
+            }
+            string OrgChart::get_name(){
+                return this->name;
             }
             OrgChart OrgChart::add_root(string name){
                 OrgChart o;
