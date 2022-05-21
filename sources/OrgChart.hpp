@@ -5,17 +5,35 @@
 #include <queue>
 using namespace std;
 namespace ariel{
+    struct Node{
+                string name;
+                vector <Node*> subs;
+                Node(const string& name) //constructor for Node
+			: name(name){
+		        }
+            };
     class OrgChart
     {
         private:
-            string name;
-            vector <OrgChart*> children;
+            //fields
+            Node* root; //head of OrgChart
+            int size;
+
         public:
             class level_order_iterator{
                 private:
-                    OrgChart* pointer_to_curr;
-
+                    Node* pointer_to_curr;
+                    queue <Node*> q;
                 public:
+                    level_order_iterator(Node* ptr = nullptr)
+                        : pointer_to_curr(ptr){
+                    }
+                    Node* get_curr(){
+                        return this->pointer_to_curr;
+                    }
+                    void set_curr(Node* n){
+                        this->pointer_to_curr = n;
+                    }
                     string& operator*() const;
                     string* operator->() const;
                     level_order_iterator operator++();
@@ -25,8 +43,12 @@ namespace ariel{
             };
             class reverse_order_iterator{
                     private:
-                        OrgChart* pointer_to_curr;
+                        Node* pointer_to_curr;
+                        //queue<OrgChart*> q;
                     public:
+                    reverse_order_iterator(Node* ptr = nullptr)
+                        : pointer_to_curr(ptr) {
+                    }
                         string& operator*() const;
                         string* operator->() const;
                         reverse_order_iterator operator++();
@@ -36,8 +58,12 @@ namespace ariel{
             };
             class preorder_order_iterator{
                     private:
-                        OrgChart* pointer_to_curr;
+                        Node* pointer_to_curr;
+                        //queue<OrgChart*> q;
                     public:
+                        preorder_order_iterator(Node* ptr = nullptr)
+                            : pointer_to_curr(ptr) {
+                        }
                         string& operator*() const;
                         string* operator->() const;
                         preorder_order_iterator operator++();
@@ -45,7 +71,10 @@ namespace ariel{
                         bool operator==(const preorder_order_iterator& rhs) const;
                         bool operator!=(const preorder_order_iterator& rhs) const;
             };
-            string get_name();
+            OrgChart(){
+                this->root = nullptr;
+                this->size = 0;
+            }
             OrgChart add_root(string name);
             OrgChart add_sub(string higher, string lower);
             level_order_iterator begin_level_order();

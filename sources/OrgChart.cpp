@@ -12,12 +12,23 @@ namespace ariel{
             //to do: write function for level order
             //++i
             OrgChart::level_order_iterator OrgChart::level_order_iterator::operator++(){
-                OrgChart::level_order_iterator it;
-                return it;
+                //it now points to curr
+                //it++ will put that iterator's children in queue
+                //pop the first and return it 
+                if(q.empty()){
+                    return level_order_iterator(nullptr);
+                }
+                for(unsigned long i = 0; i < this->pointer_to_curr->subs.size(); i++){
+                q.push(this->pointer_to_curr->subs[i]); //push all subs into queue
+                }
+                Node* top = q.front();
+                q.pop();
+                return level_order_iterator(top); 
             }
             //to do: write function for level order
             //i++
             const OrgChart::level_order_iterator OrgChart::level_order_iterator::operator++(int){
+
                 OrgChart::level_order_iterator it;
                 return it;
             }
@@ -27,6 +38,8 @@ namespace ariel{
             bool OrgChart::level_order_iterator::operator!=(const OrgChart::level_order_iterator& rhs) const{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
+
+
             string& OrgChart::reverse_order_iterator::operator*() const{
                 return this->pointer_to_curr->name;
             }
@@ -51,6 +64,8 @@ namespace ariel{
             bool OrgChart::reverse_order_iterator::operator!=(const OrgChart::reverse_order_iterator& rhs) const{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
+
+
             string& OrgChart::preorder_order_iterator::operator*() const{
                 return this->pointer_to_curr->name;
             }
@@ -73,13 +88,21 @@ namespace ariel{
             bool OrgChart::preorder_order_iterator::operator!=(const preorder_order_iterator& rhs) const{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
-            string OrgChart::get_name(){
-                return this->name;
-            }
+            // string OrgChart::get_name(){
+            //     return this->roo
+            // }
+
+
             OrgChart OrgChart::add_root(string name){
-                OrgChart o;
-                return o;
+                if(this->root != nullptr){
+                    throw invalid_argument("root already exists in this chart");
+                }
+                Node new_root = Node(name); //node with name and no subs yet
+                this->root = &new_root;
+                this->size = 1;
+                return *this;
             }
+
             OrgChart OrgChart::add_sub(string higher, string lower){
                 // auto it = begin_level_order();
                 // while(it != end_level_order()){
@@ -90,20 +113,19 @@ namespace ariel{
                 // if(it == end_level_order()){
                 //     throw invalid_argument("higher person does not exist");
                 // }
+                //size ++
+                
                 OrgChart o;
                 return o;               
             }
             OrgChart::level_order_iterator OrgChart::begin_level_order(){
-                OrgChart::level_order_iterator it; 
-                return it;
+                return level_order_iterator(this->root);
             }
             OrgChart::level_order_iterator OrgChart::end_level_order(){
-                OrgChart::level_order_iterator it; 
-                return it;
+                return level_order_iterator(nullptr);
             }
             OrgChart::reverse_order_iterator OrgChart::begin_reverse_order(){
-                OrgChart::reverse_order_iterator it; 
-                return it;
+                return NULL;
             }
             OrgChart::reverse_order_iterator OrgChart::reverse_order(){
                 OrgChart::reverse_order_iterator it; 
