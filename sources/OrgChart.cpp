@@ -12,25 +12,33 @@ namespace ariel{
             //to do: write function for level order
             //++i
             OrgChart::level_order_iterator OrgChart::level_order_iterator::operator++(){
-                //it now points to curr
-                //it++ will put that iterator's children in queue
-                //pop the first and return it 
-                if(q.empty()){
-                    return level_order_iterator(nullptr);
+                if(q.empty()){ //end of chart
+                    this->pointer_to_curr = nullptr;
+                    return *this;
                 }
                 for(unsigned long i = 0; i < this->pointer_to_curr->subs.size(); i++){
-                q.push(this->pointer_to_curr->subs[i]); //push all subs into queue
+                    q.push(this->pointer_to_curr->subs[i]); //push all subs into queue
                 }
-                Node* top = q.front();
-                q.pop();
-                return level_order_iterator(top); 
+                Node* top = q.front(); //this is will be next iterator
+                q.pop(); //delete from queue
+                this->pointer_to_curr = top;
+                return *this;
             }
             //to do: write function for level order
             //i++
             const OrgChart::level_order_iterator OrgChart::level_order_iterator::operator++(int){
-
-                OrgChart::level_order_iterator it;
-                return it;
+                level_order_iterator tmp= *this;
+                if(q.empty()){ //end of chart
+                    this->pointer_to_curr == nullptr;
+                    return tmp;
+                }
+                for(unsigned long i = 0; i < this->pointer_to_curr->subs.size(); i++){
+                    q.push(this->pointer_to_curr->subs[i]); //push all subs into queue
+                }
+                Node* top = q.front(); //this will be the next iterator
+                q.pop(); //delete from queue
+                this->pointer_to_curr = top;
+			    return tmp;
             }
             bool OrgChart::level_order_iterator::operator==(const OrgChart::level_order_iterator& rhs) const{
                 return pointer_to_curr == rhs.pointer_to_curr;
@@ -74,13 +82,32 @@ namespace ariel{
             }
             //to do: write function for preorder order ++i
             OrgChart::preorder_order_iterator OrgChart::preorder_order_iterator::operator++(){
-                OrgChart::preorder_order_iterator it;
-                return it;
+                if(stk.empty()){
+                    this->pointer_to_curr = nullptr;
+                    return *this;
+                }
+                for(unsigned long i = this->pointer_to_curr->subs.size() - 1; i >= 0; i--){
+                    stk.push(this->pointer_to_curr->subs[i]);
+                }
+                Node* top = stk.top(); //this is will be next iterator
+                stk.pop(); //delete from stk
+                this->pointer_to_curr = top;
+                return *this;
             }
             //to do: write funtion for preorder i++
             const OrgChart::preorder_order_iterator OrgChart::preorder_order_iterator::operator++(int){
-                OrgChart::preorder_order_iterator it;
-                return it;
+                preorder_order_iterator tmp = *this;
+                if(stk.empty()){
+                    this->pointer_to_curr = nullptr;
+                    return tmp;
+                }
+                for(unsigned long i = this->pointer_to_curr->subs.size() - 1; i >= 0; i--){
+                    stk.push(this->pointer_to_curr->subs[i]);
+                }
+                Node* top = stk.top(); //this is will be next iterator
+                stk.pop(); //delete from stk
+                this->pointer_to_curr = top;
+                return tmp;
             }
             bool OrgChart::preorder_order_iterator::operator==(const preorder_order_iterator& rhs) const{
                 return pointer_to_curr == rhs.pointer_to_curr;

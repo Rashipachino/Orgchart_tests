@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 using namespace std;
 namespace ariel{
     struct Node{
@@ -59,7 +60,7 @@ namespace ariel{
             class preorder_order_iterator{
                     private:
                         Node* pointer_to_curr;
-                        //queue<OrgChart*> q;
+                        stack<Node*> stk;
                     public:
                         preorder_order_iterator(Node* ptr = nullptr)
                             : pointer_to_curr(ptr) {
