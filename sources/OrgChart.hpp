@@ -26,8 +26,8 @@ namespace ariel{
                     Node* pointer_to_curr;
                     queue <Node*> q;
                 public:
-                    level_order_iterator(Node* ptr = nullptr)
-                        : pointer_to_curr(ptr){
+                    level_order_iterator(Node* ptr = nullptr){
+                        pointer_to_curr = ptr;
                     }
                     Node* get_curr(){
                         return this->pointer_to_curr;
@@ -45,11 +45,24 @@ namespace ariel{
             class reverse_order_iterator{
                     private:
                         Node* pointer_to_curr;
-                        //queue<OrgChart*> q;
+                        stack<Node*> reverse_stk;
+                        queue<Node*> reverse_q;
                     public:
-                    reverse_order_iterator(Node* ptr = nullptr)
-                        : pointer_to_curr(ptr) {
-                    }
+                        reverse_order_iterator(Node* ptr = nullptr)
+                            : pointer_to_curr(ptr) {
+                        }
+                        stack<Node*> OrgChart::reverse_order_iterator::get_stk(){
+                            return this->reverse_stk;
+                        }
+                        queue<Node*> OrgChart::reverse_order_iterator::get_q(){
+                            return this->reverse_q;
+                        }
+                        Node* get_curr(){
+                            return this->pointer_to_curr;
+                        }
+                        void set_curr(Node* new_curr){
+                            this->pointer_to_curr = new_curr;
+                        }                       
                         string& operator*() const;
                         string* operator->() const;
                         reverse_order_iterator operator++();

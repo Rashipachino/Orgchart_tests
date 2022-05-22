@@ -12,6 +12,7 @@ namespace ariel{
             //to do: write function for level order
             //++i
             OrgChart::level_order_iterator OrgChart::level_order_iterator::operator++(){
+                q.push(this->pointer_to_curr);
                 if(q.empty()){ //end of chart
                     this->pointer_to_curr = nullptr;
                     return *this;
@@ -73,14 +74,13 @@ namespace ariel{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
 
-
             string& OrgChart::preorder_order_iterator::operator*() const{
                 return this->pointer_to_curr->name;
             }
             string* OrgChart::preorder_order_iterator::operator->() const{
                 return &(this->pointer_to_curr->name);
             }
-            //to do: write function for preorder order ++i
+
             OrgChart::preorder_order_iterator OrgChart::preorder_order_iterator::operator++(){
                 if(stk.empty()){
                     this->pointer_to_curr = nullptr;
@@ -94,7 +94,7 @@ namespace ariel{
                 this->pointer_to_curr = top;
                 return *this;
             }
-            //to do: write funtion for preorder i++
+            
             const OrgChart::preorder_order_iterator OrgChart::preorder_order_iterator::operator++(int){
                 preorder_order_iterator tmp = *this;
                 if(stk.empty()){
@@ -115,9 +115,6 @@ namespace ariel{
             bool OrgChart::preorder_order_iterator::operator!=(const preorder_order_iterator& rhs) const{
                 return pointer_to_curr != rhs.pointer_to_curr;
             }
-            // string OrgChart::get_name(){
-            //     return this->roo
-            // }
 
 
             OrgChart OrgChart::add_root(string name){
@@ -131,20 +128,21 @@ namespace ariel{
             }
 
             OrgChart OrgChart::add_sub(string higher, string lower){
-                // auto it = begin_level_order();
-                // while(it != end_level_order()){
-                //     if(*it == higher){
-                //         break;
-                //     }
-                // }
-                // if(it == end_level_order()){
-                //     throw invalid_argument("higher person does not exist");
-                // }
-                //size ++
-                
-                OrgChart o;
-                return o;               
+                level_order_iterator it = begin_level_order();
+                while(it != end_level_order()){
+                    if(*it == higher){
+                        break;
+                    }
+                }
+                if(it == end_level_order()){
+                    throw invalid_argument("higher person does not exist");
+                }
+                Node* sub = &(Node(lower));
+                it.get_curr()->subs.push_back(sub); //add lower to the vector subs or higher
+                size ++; //increase size of chart
+                return *this; //return chart once updates have finished
             }
+
             OrgChart::level_order_iterator OrgChart::begin_level_order(){
                 return level_order_iterator(this->root);
             }
@@ -152,19 +150,28 @@ namespace ariel{
                 return level_order_iterator(nullptr);
             }
             OrgChart::reverse_order_iterator OrgChart::begin_reverse_order(){
-                return NULL;
+                reverse_order_iterator rit = reverse_order_iterator(nullptr);
+                rit.get_q().push(this->root);
+                while(!rit.get_q().empty()){
+                    Node* top = rit.get_q().front();
+                    rit.get_stk().push(top); //push the top from q to stack
+                    rit.get_q().pop(); //pop top
+                    for(unsigned long i = top->subs.size() - 1; i >=0; i--){
+                        rit.get_q().push(top->subs[i]);
+                    }
+                }
+                rit.set_curr(rit.get_stk().top()); 
+                rit.get_stk().pop(); //pop the value
+                return rit;
             }
             OrgChart::reverse_order_iterator OrgChart::reverse_order(){
-                OrgChart::reverse_order_iterator it; 
-                return it;
+                return reverse_order_iterator(nullptr);
             }
             OrgChart::preorder_order_iterator OrgChart::begin_preorder(){
-                OrgChart::preorder_order_iterator it; 
-                return it;
+                return preorder_order_iterator(this->root);
             }
             OrgChart::preorder_order_iterator OrgChart::end_preorder(){
-                OrgChart::preorder_order_iterator it; 
-                return it;
+                return preorder_order_iterator(nullptr);
             }
             ostream& operator<< (ostream& output, const OrgChart& o){
                 return output;
