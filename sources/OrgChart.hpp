@@ -23,18 +23,21 @@ namespace ariel{
         public:
             class level_order_iterator{
                 private:
-                    Node* pointer_to_curr;
+                    //Node* pointer_to_curr;
                     queue <Node*> q;
                 public:
                     level_order_iterator(Node* ptr = nullptr){
-                        pointer_to_curr = ptr;
+                        q.push(ptr);
                     }
-                    Node* get_curr(){
-                        return this->pointer_to_curr;
+                    Node* get_top(){
+                        return this->q.front();
                     }
-                    void set_curr(Node* n){
-                        this->pointer_to_curr = n;
-                    }
+                    // Node* get_curr(){
+                    //     return this->pointer_to_curr;
+                    // }
+                    // void set_curr(Node* n){
+                    //     this->pointer_to_curr = n;
+                    // }
                     string& operator*() const;
                     string* operator->() const;
                     level_order_iterator operator++();
@@ -44,25 +47,33 @@ namespace ariel{
             };
             class reverse_order_iterator{
                     private:
-                        Node* pointer_to_curr;
+                        //Node* pointer_to_curr;
                         stack<Node*> reverse_stk;
                         queue<Node*> reverse_q;
                     public:
-                        reverse_order_iterator(Node* ptr = nullptr)
-                            : pointer_to_curr(ptr) {
+                        reverse_order_iterator(Node* ptr = nullptr){
+                            reverse_q.push(ptr);
+                            while(!reverse_q.empty()){
+                                Node* top = reverse_q.front();
+                                reverse_stk.push(top);
+                                reverse_q.pop();
+                                for(unsigned long i = top->subs.size() - 1; i >=0; i--){
+                                    reverse_q.push(top->subs[i]);
+                                }
+                            }
                         }
-                        stack<Node*> OrgChart::reverse_order_iterator::get_stk(){
-                            return this->reverse_stk;
-                        }
-                        queue<Node*> OrgChart::reverse_order_iterator::get_q(){
-                            return this->reverse_q;
-                        }
-                        Node* get_curr(){
-                            return this->pointer_to_curr;
-                        }
-                        void set_curr(Node* new_curr){
-                            this->pointer_to_curr = new_curr;
-                        }                       
+                        // stack<Node*> OrgChart::reverse_order_iterator::get_stk(){
+                        //     return this->reverse_stk;
+                        // }
+                        // queue<Node*> OrgChart::reverse_order_iterator::get_q(){
+                        //     return this->reverse_q;
+                        // }
+                        // // Node* get_curr(){
+                        //     return this->pointer_to_curr;
+                        // }
+                        // void set_curr(Node* new_curr){
+                        //     this->pointer_to_curr = new_curr;
+                        // }                       
                         string& operator*() const;
                         string* operator->() const;
                         reverse_order_iterator operator++();
@@ -72,11 +83,14 @@ namespace ariel{
             };
             class preorder_order_iterator{
                     private:
-                        Node* pointer_to_curr;
+                        //Node* pointer_to_curr;
                         stack<Node*> stk;
                     public:
-                        preorder_order_iterator(Node* ptr = nullptr)
-                            : pointer_to_curr(ptr) {
+                        preorder_order_iterator(Node* ptr = nullptr){
+                            stk.push(ptr);
+                        }
+                        Node* get_top(){
+                            return stk.top();
                         }
                         string& operator*() const;
                         string* operator->() const;
