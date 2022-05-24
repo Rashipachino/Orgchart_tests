@@ -6,16 +6,19 @@
 #include <stack>
 using namespace std;
 namespace ariel{
-    struct Node{
-                string name;
-                vector <Node*> subs;
-                Node(const string& name) //constructor for Node
-			: name(name){
-		        }
-            };
     class OrgChart
     {
         private:
+            struct Node{
+                    string name;
+                    vector <Node*> subs;
+                    Node(const string& name){ //constructor for node
+                        this->name = name;
+                    }
+                }; 
+                // : name(name){
+                //     }
+                // };
             //fields
             Node* root; //head of OrgChart
             int size;
@@ -25,13 +28,35 @@ namespace ariel{
                 private:
                     //Node* pointer_to_curr;
                     queue <Node*> q;
+                    Node* end_p;
                 public:
-                    level_order_iterator(Node* ptr = nullptr){
-                        q.push(ptr);
+                    level_order_iterator(Node* ptr){
+                        if(ptr != nullptr){
+                            q.push(ptr);
+                        }
+                        
                     }
+                    level_order_iterator(const level_order_iterator& other){
+                        this->q = other.q;
+                    }
+                    level_order_iterator& operator=(const level_order_iterator& other){
+                        if(this==&other){
+                            return *this;
+                        }
+                        this->q = other.q;
+                        return *this;
+                    }
+                    // ~level_order_iterator(){
+                    //     while(!q.empty()){
+                    //         q.pop();
+                    //     }
+                    // }
                     Node* get_top(){
                         return this->q.front();
                     }
+
+
+                    
                     // Node* get_curr(){
                     //     return this->pointer_to_curr;
                     // }
@@ -89,9 +114,27 @@ namespace ariel{
                         preorder_order_iterator(Node* ptr = nullptr){
                             stk.push(ptr);
                         }
+                        preorder_order_iterator(const preorder_order_iterator& other){
+                            this->stk = other.stk;
+                        }
+                        preorder_order_iterator& operator=(const preorder_order_iterator& other){
+                            if(this==&other){
+                                return *this;
+                            }
+                            this->stk = other.stk;
+                            return *this;
+                        }
+                        // ~preorder_order_iterator(){
+                        //     while(!stk.empty()){
+                        //         stk.pop();
+                        //     }
+                        // }
                         Node* get_top(){
                             return stk.top();
                         }
+
+
+
                         string& operator*() const;
                         string* operator->() const;
                         preorder_order_iterator operator++();
@@ -99,14 +142,45 @@ namespace ariel{
                         bool operator==(const preorder_order_iterator& rhs) const;
                         bool operator!=(const preorder_order_iterator& rhs) const;
             };
-            OrgChart(){
-                this->root = nullptr;
-                this->size = 0;
+            OrgChart():
+                root(nullptr),
+                size(0)
+                {}
+            // OrgChart(const OrgChart& other){
+            //         root = other.root;
+            //         size = other.size;
+            //     }
+
+            // OrgChart& operator=(const OrgChart& other){
+            //     if(this==&other)
+            //         return *this;
+            //     if(this->root !=)
+            // }
+
+
+            
+
+                
+            // {
+            //     this->root = nullptr;
+            //     this->size = 0;
+            // }
+            ~OrgChart(){
+                queue<Node*> del_q;
+                del_q.push(root);
+                while(!del_q.empty()){
+                    Node* top = del_q.front();
+                    for(unsigned long i = 0; i < top->subs.size(); i++){
+                        del_q.push(top->subs[i]);
+                    }
+                    del_q.pop();
+                    delete top;
+                }
             }
             OrgChart add_root(string name);
             OrgChart add_sub(string higher, string lower);
-            level_order_iterator begin_level_order();
-            level_order_iterator end_level_order();
+            level_order_iterator begin_level_order() const;
+            level_order_iterator end_level_order() const;
             reverse_order_iterator begin_reverse_order();
             reverse_order_iterator reverse_order();
             preorder_order_iterator begin_preorder();

@@ -43,8 +43,10 @@ namespace ariel{
                 //return pointer_to_curr == rhs.pointer_to_curr;
             }
             bool OrgChart::level_order_iterator::operator!=(const OrgChart::level_order_iterator& rhs) const{
-                return this->q.front() != rhs.q.front();
-                //return pointer_to_curr != rhs.pointer_to_curr;
+                if((this->q.front() == nullptr && rhs.q.front() != nullptr) || (this->q.front() != nullptr && rhs.q.front() == nullptr)){
+                    return false;
+                }
+                return this->q.front() != rhs.q.front();  
             }
 
 
@@ -116,33 +118,35 @@ namespace ariel{
                 if(this->root != nullptr){
                     throw invalid_argument("root already exists in this chart");
                 }
-                Node new_root = Node(name); //node with name and no subs yet
-                this->root = &new_root;
+                Node* new_root = new Node(name); //node with name and no subs yet
+                this->root = new_root; 
                 this->size = 1;
                 return *this;
             }
 
             OrgChart OrgChart::add_sub(string higher, string lower){
                 level_order_iterator it = begin_level_order();
+                cout << "it: " << *it << endl;
                 while(it != end_level_order()){
+                    cout << *it << endl;
                     if(*it == higher){
                         break;
                     }
                 }
+                cout << "stopped" << endl;
                 if(it == end_level_order()){
                     throw invalid_argument("higher person does not exist");
                 }
-                Node sub = Node(lower);
-                Node* subptr = &sub;
-                it.get_top()->subs.push_back(subptr); //add lower to the vector subs or higher
+                Node* sub =  new Node(lower);
+                it.get_top()->subs.push_back(sub); //add lower to the vector subs or higher
                 size ++; //increase size of chart
                 return *this; //return chart once updates have finished
             }
 
-            OrgChart::level_order_iterator OrgChart::begin_level_order(){
+            OrgChart::level_order_iterator OrgChart::begin_level_order() const{
                 return level_order_iterator(this->root);
             }
-            OrgChart::level_order_iterator OrgChart::end_level_order(){
+            OrgChart::level_order_iterator OrgChart::end_level_order() const{
                 return level_order_iterator(nullptr);
             }
             OrgChart::reverse_order_iterator OrgChart::begin_reverse_order(){
@@ -157,7 +161,19 @@ namespace ariel{
             OrgChart::preorder_order_iterator OrgChart::end_preorder(){
                 return preorder_order_iterator(nullptr);
             }
-            ostream& operator<< (ostream& output, const OrgChart& o){
+            std::ostream& operator<< (std::ostream& output, const OrgChart& o){
+                output << o.root;
+                for(unsigned long i = 0; i < o.root->subs.size(); i++){
+                    output << "|     "; 
+                }
+                for(auto it = o.begin_level_order(); it != o.end_level_order(); it++){
+                    output << *it;
+                    output << "\n";
+                    for(unsigned long i = 0; i < it.get_top()->subs.size(); i++){
+                    output << "|     "; 
+                    }
+                    output << "\n";
+                }
                 return output;
             }
             OrgChart::level_order_iterator OrgChart::begin(){
