@@ -25,7 +25,6 @@ namespace ariel{
                 // };
             //fields
             Node* root; //head of OrgChart
-            int size;
 
         public:
             class level_order_iterator{
@@ -59,16 +58,18 @@ namespace ariel{
                         stack<Node*> reverse_stk;
                         queue<Node*> reverse_q;
                     public:
-                        reverse_order_iterator(Node* ptr = nullptr){
-                            reverse_q.push(ptr);
-                            while(!reverse_q.empty()){
-                                Node* top = reverse_q.front();
-                                reverse_stk.push(top);
-                                reverse_q.pop();
-                                for(unsigned long i = top->subs.size() - 1; i >=0; i--){
-                                    reverse_q.push(top->subs[i]);
+                        reverse_order_iterator(Node* ptr){
+                            if(ptr != nullptr){
+                                reverse_q.push(ptr);
+                                while(!reverse_q.empty()){
+                                    Node* top = reverse_q.front();
+                                    reverse_stk.push(top);
+                                    reverse_q.pop();
+                                    for(unsigned long i = top->subs.size() - 1; i >=0 && i < top->subs.size(); i--){
+                                        reverse_q.push(top->subs[i]);
+                                    }
                                 }
-                            }
+                            } 
                         }        
                         string& operator*() const;
                         string* operator->() const;
@@ -103,41 +104,44 @@ namespace ariel{
                         bool operator!=(const preorder_order_iterator& rhs) const;
                         preorder_order_iterator& operator=(const preorder_order_iterator& other);
             };
-            OrgChart():
-                root(nullptr),
-                size(0)
-                {}
-            // OrgChart(const OrgChart& other){
-            //         root = other.root;
-            //         size = other.size;
-            //     }
-
-            // OrgChart& operator=(const OrgChart& other){
-            //     if(this==&other)
-            //         return *this;
-            //     if(this->root !=)
-            // }
-
-
-            
-
+            OrgChart(){
+                this->root = nullptr;
+            }
+            ~OrgChart(){
+                if(this->root != nullptr){
+                    queue<Node*> del_q;
+                    del_q.push(this->root);
+                    while(!del_q.empty()){
+                        Node* top = del_q.front();
+                        for(unsigned long i = 0; i < top->subs.size(); i++){
+                            del_q.push(top->subs[i]);
+                        }
+                        del_q.pop();
+                        delete top;
+                    }
+                }
+            }
+            OrgChart(const OrgChart& other){
+                this->root = other.root;
+            }
+            OrgChart& operator=(const OrgChart& other){
+                if(this != &other){
+                    this->root = other.root;
+                }
+                return *this;
                 
-            // {
-            //     this->root = nullptr;
-            //     this->size = 0;
-            // }
-            // ~OrgChart(){
-            //     queue<Node*> del_q;
-            //     del_q.push(root);
-            //     while(!del_q.empty()){
-            //         Node* top = del_q.front();
-            //         for(unsigned long i = 0; i < top->subs.size(); i++){
-            //             del_q.push(top->subs[i]);
-            //         }
-            //         del_q.pop();
-            //         delete top;
-            //     }
-            // }
+            }
+            OrgChart(OrgChart&& other) noexcept : root(nullptr) {
+                this->root = other.root;
+                other.root = nullptr;
+            }
+            OrgChart& operator=(OrgChart&& other) noexcept {
+                if (this != &other) {
+                    this->root = other.root;
+                    other.root = nullptr;
+                }
+                return *this;
+            }
             OrgChart add_root(string name);
             OrgChart add_sub(string higher, string lower);
             level_order_iterator begin_level_order() const;
@@ -147,6 +151,7 @@ namespace ariel{
             preorder_order_iterator begin_preorder();
             preorder_order_iterator end_preorder();
             friend ostream& operator<< (ostream& output, const OrgChart& o);
+            static void print_Org(ostream& output, Node* root, int count);
             level_order_iterator begin();
             level_order_iterator end();
     };
